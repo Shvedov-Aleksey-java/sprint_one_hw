@@ -60,10 +60,18 @@ public class StepTracker {
         System.out.println("данные успешно сохранены");
     }
     void printStatistic(){
-
+        System.out.println("для выхода в преведущее меню ведите 0");
         System.out.println("Введите число месяца");
+        int monthNumber = scanner.nextInt();
+        if (monthNumber == 0)return;
+        if (monthNumber < 1 || monthNumber > 12) {
+            System.out.println("неверно введены данные повторите попытку");
+            printStatistic();
+            return;
+        }
+
         Converter converter = new Converter();
-        MonthData monthData = this.monthData[scanner.nextInt() - 1];
+        MonthData monthData = this.monthData[monthNumber - 1];
         int sumSteps = monthData.sumStepsFromMonth();
         monthData.printDaysAndStepsFromMonth();
         System.out.println("сумма шагов за месяц: " + sumSteps);
