@@ -35,7 +35,7 @@ public class MonthData {
             if (days[i] == 0)nullSeries++;
             if (finalSeries < currentSeries)finalSeries = currentSeries;
         }
-        if (nullSeries == 29&&days[29] == 0)finalSeries = 0;
+        if (nullSeries == 29 && days[29] == 0)finalSeries = 0;
         return finalSeries;
     }
 }
