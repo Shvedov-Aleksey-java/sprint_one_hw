@@ -35,7 +35,6 @@ public class MonthData {
             if (days[i] == 0)nullSeries++;
             if (finalSeries < currentSeries)finalSeries = currentSeries;
         }
-        System.out.println(nullSeries);
         if (nullSeries == 29&&days[29] == 0)finalSeries = 0;
         return finalSeries;
     }
