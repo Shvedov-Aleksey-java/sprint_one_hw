@@ -1,0 +1,212 @@
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 150b3e00357e60a831d20068d03f9dcf35e038cc)
++++ b/.idea/misc.xml	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="18" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/Converter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Converter.java b/src/Converter.java
+new file mode 100644
+--- /dev/null	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
++++ b/src/Converter.java	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
+@@ -0,0 +1,8 @@
++public class Converter {
++    int convertToKm(int steps){
++        return (int) steps * 75 / 100000;
++    }
++    int convertStepsToKilocalories(int steps){
++        return steps * 50000;
++    }
++}
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+new file mode 100644
+--- /dev/null	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
++++ b/src/Main.java	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
+@@ -0,0 +1,35 @@
++import java.util.Scanner;
++
++public class Main {
++    public static void main(String[] args) {
++        Scanner scanner = new Scanner(System.in);
++        StepTracker stepTracker = new StepTracker(scanner);
++        while (true){
++            printMenu();
++            int i = scanner.nextInt();
++            switch (i){
++                case 1:
++                    stepTracker.addNewNumberStepsPerDay();
++                    break;
++                case 2:
++                    stepTracker.changeStepGoal();
++                    break;
++                case 3:
++                    stepTracker.printStatistic();
++                    break;
++                case 4:
++                    return;
++                default:
++                    System.out.println("Такой команды нет");
++
++            }
++
++        }
++    }
++    static void printMenu(){
++        System.out.println("1-ввести количество шагов за определённый день\n" +
++                "2-изменить цель по количеству шагов в день\n" +
++                "3-напечатать статистику за определённый месяц\n" +
++                "4-выйти из приложения");
++    }
++}
+Index: src/MonthData.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/MonthData.java b/src/MonthData.java
+new file mode 100644
+--- /dev/null	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
++++ b/src/MonthData.java	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
+@@ -0,0 +1,34 @@
++public class MonthData {
++    int[] days = new int[30];
++
++    void printDaysAndStepsFromMonth(){
++        for (int i = 0; i < days.length; i++) {
++            System.out.println(i + 1 + " день: " + days[i]);
++        }
++    }
++    int sumStepsFromMonth(){
++        int sum = 0;
++        for (int i : days
++        ) {
++            sum += i;
++        }
++        return sum;
++    }
++    int maxSteps(){
++        int max = 0;
++        for (int i : days
++        ) {
++            if (i > max)max = i;
++        }
++        return max;
++    }
++    int bestSeries(int goalByStepsPerDay){
++        int currentSeries = 0;
++        int finalSeries = 0;
++        for (int i = 0; i < days.length; i++) {
++            if (days[i] >= goalByStepsPerDay && days[i + 1] >= goalByStepsPerDay)currentSeries++;
++            if (finalSeries < currentSeries)finalSeries = currentSeries;
++        }
++        return finalSeries;
++    }
++}
+Index: src/StepTracker.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/StepTracker.java b/src/StepTracker.java
+new file mode 100644
+--- /dev/null	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
++++ b/src/StepTracker.java	(revision 33b64411e4ee8fdfc12ebd79ddaae79df00cacc2)
+@@ -0,0 +1,78 @@
++import java.util.Scanner;
++
++public class StepTracker {
++    Scanner scanner;
++    MonthData[] monthData = new MonthData[12];
++    int goalByStepsPerDay = 10000;
++
++    StepTracker(Scanner scan) {
++        scanner = scan;
++        for (int i = 0; i < monthData.length; i++) {
++            monthData[i] = new MonthData();
++        }
++    }
++
++    void addNewNumberStepsPerDay() {
++        System.out.println("для выхода в преведущее меню ведите 0");
++        System.out.println("Введите номер месяца");
++        int monthNumber = scanner.nextInt();
++        if (monthNumber == 0)return;
++        if (monthNumber < 1 || monthNumber > 12) {
++            System.out.println("неверно введены данные повторите попытку");
++            addNewNumberStepsPerDay();
++            return;
++        }
++        System.out.println("вы ввели: " + monthNumber);
++        System.out.println("Введите день от 1 до 30 (включительно)");
++        int dayNumber = scanner.nextInt();
++        if (dayNumber == 0)return;
++        if (dayNumber < 1 || dayNumber > 30) {
++            System.out.println("неверно введены данные повторите попытку");
++            addNewNumberStepsPerDay();
++            return;
++        }
++        System.out.println("вы ввели: " + dayNumber);
++        System.out.println("Введите количество шагов");
++        int stepsOfNumber = scanner.nextInt();
++        if (stepsOfNumber == 0)return;
++        if (stepsOfNumber < 1) {
++            System.out.println("неверно введены данные повторите попытку");
++            addNewNumberStepsPerDay();
++            return;
++        }
++        System.out.println("вы ввели: " + stepsOfNumber);
++
++        MonthData monthData = this.monthData[monthNumber - 1];
++        monthData.days[dayNumber - 1] = stepsOfNumber;
++        System.out.println("данные успешно сохранены");
++    }
++    void changeStepGoal(){
++        System.out.println("ведите новую цель по количеству шагов\n" +
++                "для выхода в преведущее меню ведите 0");
++        int stepsGoal = scanner.nextInt();
++        if (stepsGoal == 0)return;
++        if (stepsGoal < 1) {
++            System.out.println("неверно введены данные повторите попытку");
++            changeStepGoal();
++            return;
++        }
++        goalByStepsPerDay = stepsGoal;
++        System.out.println("данные успешно сохранены");
++    }
++    void printStatistic(){
++
++        System.out.println("Введите число месяца");
++        Converter converter = new Converter();
++        MonthData monthData = this.monthData[scanner.nextInt() - 1];
++        int sumSteps = monthData.sumStepsFromMonth();
++        monthData.printDaysAndStepsFromMonth();
++        System.out.println("сумма шагов за месяц: " + sumSteps);
++        System.out.println("максимальное пройденноое количество шагов за месяц: " + monthData.maxSteps());
++        System.out.println("среднее пройденное количество шагов за месяц: " + sumSteps / 30);
++        System.out.println("пройденна за месяц дистанция в км: " + converter.convertToKm(sumSteps));
++        System.out.println("количество сожжённых килокалорий за месяц: " + converter.convertStepsToKilocalories(sumSteps));
++        System.out.println("лучшая серия: " + monthData.bestSeries(goalByStepsPerDay));
++
++
++    }
++}

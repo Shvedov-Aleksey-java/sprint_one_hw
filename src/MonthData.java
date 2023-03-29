@@ -23,12 +23,20 @@ public class MonthData {
         return max;
     }
     int bestSeries(int goalByStepsPerDay){
-        int currentSeries = 0;
+        int nullSeries = 0;
+        int currentSeries = 1;
         int finalSeries = 0;
         for (int i = 0; i < days.length - 1; i++) {
-            if (days[i] >= goalByStepsPerDay && days[i + 1] >= goalByStepsPerDay)currentSeries++;
+            if (days[i] >= goalByStepsPerDay && days[i + 1] >= goalByStepsPerDay){
+                currentSeries++;
+            }else {
+                currentSeries = 1;
+            }
+            if (days[i] == 0)nullSeries++;
             if (finalSeries < currentSeries)finalSeries = currentSeries;
         }
+        System.out.println(nullSeries);
+        if (nullSeries == 29&&days[29] == 0)finalSeries = 0;
         return finalSeries;
     }
 }
